@@ -20,8 +20,6 @@ class User():
     self.transactions = []
 
 user = User()
-payer_points = {}
-transactions = []
 
 @app.get("/")
 def home():
@@ -36,12 +34,12 @@ def get_payer_points():
 @app.post("/points", status_code=200)
 def add_transaction(transaction: PayerTransaction):
 
-  validate_transaction(transaction, user.payer_points, transactions)
-  return process_transaction(transactions, transaction, user.payer_points, user)
+  validate_transaction(transaction, user.payer_points, user.transactions)
+  return process_transaction(user.transactions, transaction, user.payer_points, user)
 
 @app.post("/points/spend", status_code=200)
 def spend_payer_points(spend: SpendPoints):
 
   validate_spend(spend.points, user.total_points)
   user.total_points -= spend.points
-  return process_spend(spend.points, transactions, user.payer_points)
+  return process_spend(spend.points, user.transactions, user.payer_points)
