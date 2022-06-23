@@ -12,14 +12,6 @@ def validate_transaction(transaction, payer_points, transactions):
     raise HTTPException(status_code=422,
     detail=f'ERROR: Unable to add transaction; Points must be positive or negative integer.')
 
-  transactions_copy = transactions[:]
-  transactions_copy.append(transaction)
-  try:
-    transactions_copy.sort(key=lambda date: date.timestamp, reverse=True)
-  except:
-    raise HTTPException(status_code=422,
-    detail=f'ERROR: Unable to add transaction; Date formatted incorrectly.')
-
 def process_transaction(transactions, transaction, payer_points, user):
   user.total_points += transaction.points
 
@@ -44,7 +36,8 @@ def validate_spend(spend, user_points):
     raise HTTPException(status_code=422,
     detail=f'ERROR: Points spend must be greater than 0.')
 
-def process_spend(spend, transactions, payer_points):
+def process_spend(spend, transactions, payer_points, total_points):
+  total_points -= spend
   spent = {}
   transaction_remove_counter = 0
   transIdx = len(transactions) - 1

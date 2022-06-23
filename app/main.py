@@ -41,5 +41,4 @@ def add_transaction(transaction: PayerTransaction):
 def spend_payer_points(spend: SpendPoints):
 
   validate_spend(spend.points, user.total_points)
-  user.total_points -= spend.points
-  return process_spend(spend.points, user.transactions, user.payer_points)
+  return process_spend(spend.points, user.transactions, user.payer_points, user.total_points)
